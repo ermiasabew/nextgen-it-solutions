@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Submissions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 { color: #0066cc; }
+        button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover { background: #004080; }
+        .submission {
+            background: #f9f9f9;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #0066cc;
+        }
+        .status { 
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .status.new { background: #28a745; }
+        .status.read { background: #ffc107; }
+        .status.responded { background: #6c757d; }
+        #result { margin-top: 20px; }
+        .error { color: #dc3545; }
+        .success { color: #28a745; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Contact Submissions Test Page</h1>
+    
+    <div class="card">
+        <h2>Test Actions</h2>
+        <button onclick="testAPI()">1. Test API Connection</button>
+        <button onclick="loadSubmissions()">2. Load Submissions</button>
+        <button onclick="sendTestMessage()">3. Send Test Message</button>
+        <button onclick="clearResults()">Clear Results</button>
+    </div>
+
+    <div class="card">
+        <h2>Results</h2>
+        <div id="result">Click a button above to test...</div>
+    </div>
+
+    <div class="card">
+        <h2>Submissions</h2>
+        <div id="submissions">No submissions loaded yet.</div>
+    </div>
+
+    <script>
+        const resultDiv = document.getElementById('result');
+        const submissionsDiv = document.getElementById('submissions');
+
+        function log(message, type = 'info') {
+            const color = type === 'error' ? '#dc3545' : type === 'success' ? '#28a745' : '#333';
+            resultDiv.innerHTML += `<div style="color: ${color}; margin: 5px 0;">${message}</div>`;
+        }
+
+        function clearResults() {
+            resultDiv.innerHTML = '';
+            submissionsDiv.innerHTML = 'No submissions loaded yet.';
+        }
+
+        async function testAPI() {
+            clearResults();
+            log('🔍 Testing API connection...', 'info');
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/contact/submissions');
+                log(`✅ Response Status: ${response.status}`, 'success');
+                
+                const data = await response.json();
+                log(`✅ Response Data: ${JSON.stringify(data)}`, 'success');
+                
+                if (data.success) {
+                    log(`✅ API is working! Found ${data.submissions.length} submissions`, 'success');
+                } else {
+                    log('⚠️ API returned success:false', 'error');
+                }
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+                log('💡 Make sure server is running on http://localhost:3000', 'info');
+            }
+        }
+
+        async function loadSubmissions() {
+            log('📥 Loading submissions...', 'info');
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/contact/submissions');
+                const data = await response.json();
+                
+                if (data.success && data.submissions) {
+                    log(`✅ Loaded ${data.submissions.length} submissions`, 'success');
+                    displaySubmissions(data.submissions);
+                } else {
+                    log('⚠️ No submissions found', 'error');
+                    submissionsDiv.innerHTML = '<p>No submissions in database.</p>';
+                }
+            } catch (error) {
+                log(`❌ Error loading: ${error.message}`, 'error');
+                submissionsDiv.innerHTML = '<p class="error">Error loading submissions. Is the server running?</p>';
+            }
+        }
+
+        function displaySubmissions(submissions) {
+            if (submissions.length === 0) {
+                submissionsDiv.innerHTML = '<p>No submissions yet.</p>';
+                return;
+            }
+
+            submissionsDiv.innerHTML = '';
+            
+            submissions.forEach(sub => {
+                const date = new Date(sub.submitted_at).toLocaleString();
+                const statusClass = sub.status || 'new';
+                
+                const div = document.createElement('div');
+                div.className = 'submission';
+                div.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="margin: 0;">#${sub.id} - ${sub.name}</h3>
+                        <span class="status ${statusClass}">${statusClass.toUpperCase()}</span>
+                    </div>
+                    <p><strong>📞 Phone:</strong> ${sub.phone}</p>
+                    <p><strong>📧 Email:</strong> ${sub.email}</p>
+                    <p><strong>📅 Submitted:</strong> ${date}</p>
+                    <p><strong>💬 Message:</strong></p>
+                    <div style="background: white; padding: 15px; border-radius: 5px; margin-top: 10px;">
+                        ${sub.message}
+                    </div>
+                `;
+                submissionsDiv.appendChild(div);
+            });
+        }
+
+        async function sendTestMessage() {
+            log('📤 Sending test message...', 'info');
+            
+            const testData = {
+                name: 'Test User ' + Date.now(),
+                phone: '+251911222333',
+                email: 'test@example.com',
+                message: 'This is a test message sent at ' + new Date().toLocaleString()
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/api/contact/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testData)
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    log(`✅ Message sent successfully! ID: ${data.id}`, 'success');
+                    log('🔄 Reloading submissions...', 'info');
+                    setTimeout(() => loadSubmissions(), 500);
+                } else {
+                    log(`❌ Failed to send: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Error sending: ${error.message}`, 'error');
+            }
+        }
+
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            log('🚀 Page loaded. Click buttons to test!', 'info');
+        });
+    </script>
+</body>
+</html>

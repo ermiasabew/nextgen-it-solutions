@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - NextGen IT Solutions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <i class="fas fa-shield-alt"></i>
+                <h2>Admin Login</h2>
+                <p>NextGen IT Solutions</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="adminUsername" placeholder="Enter username" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="adminPassword" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                <div id="loginError" class="error-message"></div>
+            </form>
+            <div class="login-info">
+                <p><strong>Default Credentials:</strong></p>
+                <p>Username: <code>admin</code></p>
+                <p>Password: <code>admin123</code></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="admin-dashboard" style="display: none;">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-microchip"></i>
+                <h3>Admin Panel</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="hero">
+                    <i class="fas fa-home"></i> Hero Section
+                </a>
+                <a href="#" class="nav-item" data-section="about">
+                    <i class="fas fa-info-circle"></i> About Us
+                </a>
+                <a href="#" class="nav-item" data-section="services">
+                    <i class="fas fa-cogs"></i> Services
+                </a>
+                <a href="#" class="nav-item" data-section="why">
+                    <i class="fas fa-star"></i> Why Choose Us
+                </a>
+                <a href="#" class="nav-item" data-section="testimonials">
+                    <i class="fas fa-comments"></i> Testimonials
+                </a>
+                <a href="#" class="nav-item" data-section="faq">
+                    <i class="fas fa-question-circle"></i> FAQ
+                </a>
+                <a href="#" class="nav-item" data-section="contact">
+                    <i class="fas fa-envelope"></i> Contact Info
+                </a>
+                <a href="#" class="nav-item" data-section="submissions">
+                    <i class="fas fa-inbox"></i> Contact Submissions
+                </a>
+                <a href="#" class="nav-item" data-section="social">
+                    <i class="fas fa-share-alt"></i> Social Media
+                </a>
+                <a href="#" class="nav-item" data-section="settings">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </nav>
+            <button class="btn-logout" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <h1 id="sectionTitle">Hero Section</h1>
+                <div class="top-actions">
+                    <button class="btn-preview" id="previewBtn">
+                        <i class="fas fa-eye"></i> Preview Website
+                    </button>
+                    <button class="btn-save" id="saveBtn">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <!-- Hero Section -->
+                <div id="heroSection" class="edit-section active">
+                    <div class="card">
+                        <h3><i class="fas fa-heading"></i> Hero Content</h3>
+                        <div class="form-group">
+                            <label>Main Headline</label>
+                            <input type="text" id="heroTitle" class="form-control" placeholder="Main headline">
+                        </div>
+                        <div class="form-group">
+                            <label>Sub-headline</label>
+                            <textarea id="heroSubtitle" class="form-control" rows="3" placeholder="Sub-headline text"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Button Text</label>
+                            <input type="text" id="heroButton" class="form-control" placeholder="Button text">
+                        </div>
+                        <div class="form-group">
+                            <label>Button Link</label>
+                            <input type="text" id="heroButtonLink" class="form-control" placeholder="#contact">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- About Section -->
+                <div id="aboutSection" class="edit-section">
+                    <div class="card">
+                        <h3><i class="fas fa-info-circle"></i> About Content</h3>
+                        <div class="form-group">
+                            <label>Section Title</label>
+                            <input type="text" id="aboutTitle" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Section Subtitle</label>
+                            <input type="text" id="aboutSubtitle" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Paragraph 1</label>
+                            <textarea id="aboutPara1" class="form-control" rows="4"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Paragraph 2</label>
+                            <textarea id="aboutPara2" class="form-control" rows="4"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Services Section -->
+                <div id="servicesSection" class="edit-section">
+                    <div class="card">
+                        <h3><i class="fas fa-cogs"></i> Services Management</h3>
+                        <div id="servicesList"></div>
+                        <button class="btn-add" id="addServiceBtn">
+                            <i class="fas fa-plus"></i> Add New Service
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Why Choose Us Section -->
+                <div id="whySection" class="edit-section">
+                    <div class="card">
+                        <h3><i class="fas fa-star"></i> Why Choose Us</h3>
+                        <div id="whyList"></div>
+                        <button class="btn-add" id="addWhyBtn">
+                            <i class="fas fa-plus"></i> Add New Reason
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Testimonials Section -->
+                <div id="testimonialsSection" class="edit-section">
+                    <div class="card">
+                        <h3><i class="fas fa-comments"></i> Testimonials Management</h3>
+                        <div id="testimonialsList"></div>
+                        <button class="btn-add" id="addTestimonialBtn">
+                            <i class="fas fa-plus"></i> Add New Testimonial
+                        </button>
+                    </div>
+                </div>
+
+                <!-- FAQ Section -->
+                <div id="faqSection" class="edit-section">
+                    <div class="card">
+                        <h3><i class="fas fa-question-circle"></i> FAQ Management</h3>
+                        <div id="faqList"></div>
+                        <button class="btn-add" id="addFaqBtn">
+                            <i class="fas fa-plus"></i> Add New FAQ
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Contact Section -->
+                <div id="contactSection" class="edit-section">
+                    <div class="card">
+                        <h3><i class="fas fa-envelope"></i> Contact Information</h3>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="text" id="contactPhone" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>WhatsApp Number</label>
+                            <input type="text" id="contactWhatsapp" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="contactEmail" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Office Location</label>
+                            <textarea id="contactLocation" class="form-control" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Submissions Section -->
+                <div id="submissionsSection" class="edit-section">
+                    <div class="card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 style="margin: 0;"><i class="fas fa-inbox"></i> Contact Form Submissions</h3>
+                            <button class="btn-primary" id="exportExcelBtn" style="background: #28a745; margin: 0;">
+                                <i class="fas fa-file-excel"></i> Export to Excel
+                            </button>
+                        </div>
+                        <div id="submissionsList">
+                            <p style="text-align: center; color: #666;">Loading submissions...</p>
+                        </div>
+                        <button class="btn-primary" id="refreshSubmissionsBtn" style="margin-top: 20px;">
+                            <i class="fas fa-sync"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Social Media Section -->
+                <div id="socialSection" class="edit-section">
+                    <div class="card">
+                        <h3><i class="fas fa-share-alt"></i> Social Media Links</h3>
+                        <p style="color: #666; margin-bottom: 20px;">Manage your company's social media profiles. These links appear in the website footer.</p>
+                        <div id="socialMediaList"></div>
+                        <button class="btn-add" id="addSocialBtn">
+                            <i class="fas fa-plus"></i> Add New Platform
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Settings Section -->
+                <div id="settingsSection" class="edit-section">
+                    <div class="card">
+                        <h3><i class="fas fa-cog"></i> Website Settings</h3>
+                        <div class="form-group">
+                            <label>Company Name</label>
+                            <input type="text" id="companyName" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Website Title</label>
+                            <input type="text" id="websiteTitle" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Meta Description (SEO)</label>
+                            <textarea id="metaDescription" class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Meta Keywords (SEO)</label>
+                            <textarea id="metaKeywords" class="form-control" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fas fa-lock"></i> Change Admin Password</h3>
+                        <div class="form-group">
+                            <label>New Username</label>
+                            <input type="text" id="newUsername" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <input type="password" id="newPassword" class="form-control">
+                        </div>
+                        <button class="btn-primary" id="changePasswordBtn">
+                            <i class="fas fa-key"></i> Update Credentials
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Success Toast -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Changes saved successfully!</span>
+    </div>
+
+    <script src="admin-script.js"></script>
+</body>
+</html>

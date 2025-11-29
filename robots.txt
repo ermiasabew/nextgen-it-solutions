@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin.html
+Disallow: /test-*.html
+Disallow: /uploads/
+
+Sitemap: https://nextgen-it-solutions.onrender.com/sitemap.xml

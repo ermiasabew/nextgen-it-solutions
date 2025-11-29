@@ -89,21 +89,25 @@ function initializeDatabase() {
         url TEXT NOT NULL,
         enabled INTEGER DEFAULT 1,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`);
+    )`, (err) => {
+        if (err) {
+            console.error('Error creating social_media table:', err);
+        } else {
+            // Insert default social media links after table is created
+            const defaultSocials = [
+                { platform: 'facebook', url: 'https://facebook.com/nextgenit' },
+                { platform: 'twitter', url: 'https://twitter.com/nextgenit' },
+                { platform: 'linkedin', url: 'https://linkedin.com/company/nextgenit' },
+                { platform: 'instagram', url: 'https://instagram.com/nextgenit' },
+                { platform: 'telegram', url: 'https://t.me/nextgenit' },
+                { platform: 'youtube', url: 'https://youtube.com/@nextgenit' }
+            ];
 
-    // Insert default social media links if not exists
-    const defaultSocials = [
-        { platform: 'facebook', url: 'https://facebook.com/nextgenit' },
-        { platform: 'twitter', url: 'https://twitter.com/nextgenit' },
-        { platform: 'linkedin', url: 'https://linkedin.com/company/nextgenit' },
-        { platform: 'instagram', url: 'https://instagram.com/nextgenit' },
-        { platform: 'telegram', url: 'https://t.me/nextgenit' },
-        { platform: 'youtube', url: 'https://youtube.com/@nextgenit' }
-    ];
-
-    defaultSocials.forEach(social => {
-        db.run('INSERT OR IGNORE INTO social_media (platform, url) VALUES (?, ?)', 
-            [social.platform, social.url]);
+            defaultSocials.forEach(social => {
+                db.run('INSERT OR IGNORE INTO social_media (platform, url) VALUES (?, ?)', 
+                    [social.platform, social.url]);
+            });
+        }
     });
 
     // Contact form submissions table

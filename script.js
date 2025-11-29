@@ -410,13 +410,17 @@ function renderTestimonials(testimonials) {
 async function loadSocialLinks() {
     try {
         const response = await fetch('/api/social-media');
+        if (!response.ok) {
+            console.log('Social media API not available yet');
+            return;
+        }
         const data = await response.json();
         
-        if (data.success && data.socials) {
+        if (data.success && data.socials && data.socials.length > 0) {
             renderSocialLinks(data.socials);
         }
     } catch (error) {
-        console.log('Using default social links');
+        console.log('Using default social links:', error.message);
     }
 }
 
@@ -450,8 +454,9 @@ function renderSocialLinks(socials) {
     });
 }
 
-// Load testimonials when page loads
-if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+// Load testimonials and social links when page loads
+// Only if we're accessing through HTTP (not file://)
+if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
     loadTestimonials();
     loadSocialLinks();
 }

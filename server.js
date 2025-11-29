@@ -659,9 +659,13 @@ app.get('/api/contact/export-excel', (req, res) => {
 app.get('/api/social-media', (req, res) => {
     db.all('SELECT * FROM social_media ORDER BY platform', (err, rows) => {
         if (err) {
+            // If table doesn't exist yet, return empty array
+            if (err.message.includes('no such table')) {
+                return res.json({ success: true, socials: [] });
+            }
             return res.status(500).json({ success: false, message: 'Database error' });
         }
-        res.json({ success: true, socials: rows });
+        res.json({ success: true, socials: rows || [] });
     });
 });
 
